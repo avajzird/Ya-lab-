@@ -63,3 +63,4 @@ For reliable explicit labeling, when your game moves the Search button, set `dat
 - HTTPS hosting recommended for Add to Home Screen and service-worker offline caching.
 - A browser page cannot simulate real trusted touches on another app. Future automation would have to operate inside the game/webpage and might not count as genuine physical taps for browser security checks.
 - The PWA service worker caches the demo for offline use after the first successful HTTPS visit, subject to Safari's cache management.
+TapLab deployment test.
