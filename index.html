@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TapLab">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>TapLab — Human Tap Recorder</title>
+  <style>
+    :root { color-scheme:dark; --ink:#eef3ff; --sub:#a7b4cc; --muted:#64728e; --bg:#080d19; --panel:#111b30; --line:#293650; --blue:#65c3ff; --green:#66e8bb; --orange:#ffa974; --red:#ff7e96; }
+    * {box-sizing:border-box}
+    html{min-height:100%;background:var(--bg)}
+    body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;color:var(--ink);background:radial-gradient(90vw 80vw at 95% -25%,#20375e 0%,transparent 70%),var(--bg);-webkit-font-smoothing:antialiased}
+    button{font:inherit;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}
+    .wrap{max-width:760px;margin:auto;padding:18px 16px calc(env(safe-area-inset-bottom) + 34px)}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:calc(env(safe-area-inset-top) + 7px);margin-bottom:17px}
+    .logo{display:flex;align-items:center;gap:11px;font-size:22px;font-weight:780;letter-spacing:-.7px}.mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(145deg,#5aceff,#796cf4);display:grid;place-items:center;color:#061022;font-weight:900;font-size:21px}
+    .version{color:var(--sub);font-size:12px;padding:6px 9px;border:1px solid var(--line);border-radius:20px}
+    h1{font-size:24px;line-height:1.18;letter-spacing:-.6px;margin:5px 0 7px}h2{font-size:16px;letter-spacing:-.2px;margin:0 0 12px}p{margin:0;color:var(--sub)}
+    .intro{margin-bottom:20px}.intro p{font-size:13px;max-width:600px}
+    .panel{border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(23,36,61,.97),rgba(14,23,41,.97));padding:16px;margin-bottom:14px;box-shadow:0 12px 30px #0002}
+    .controlrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+    .dot{height:8px;width:8px;border-radius:50%;background:#6f7d98}.recording .dot{background:var(--red);box-shadow:0 0 0 5px #f67e991c;animation:pulse 1.3s infinite}@keyframes pulse{50%{opacity:.55}}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #334563;background:#22334f;color:var(--ink);padding:11px 14px;border-radius:11px;font-weight:650;min-height:44px}.btn.primary{border:0;color:#061426;background:linear-gradient(120deg,#7adaff,#70a8ff)}.btn.warn{border-color:#6e3944;background:#4a2633;color:#ffb7c4}.btn.outline{background:transparent}.btn:focus-visible{outline:3px solid #69c4ff;outline-offset:2px}
+    .hint{font-size:12px;color:var(--sub);margin-top:10px}
+    .stage-label{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:11px}.pill{color:#89edcd;background:#1b403a;border:1px solid #38695b;border-radius:99px;padding:5px 9px;font-size:12px;font-weight:650}
+    .stage{position:relative;overflow:hidden;min-height:335px;height:min(49vh,430px);background:radial-gradient(circle at 25% 25%,#223958 0,transparent 42%),linear-gradient(135deg,#172541,#101b30);border:1px solid #3b5272;border-radius:15px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+    .gridback{position:absolute;inset:0;background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
+    .slot-guide{position:absolute;transform:translate(-50%,-50%);border:1px dashed #6a86aa77;border-radius:14px;width:112px;height:72px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#6e83a7;pointer-events:none}
+    .search{position:absolute;transform:translate(-50%,-50%);z-index:2;white-space:nowrap;border:1px solid #afe4ff;background:linear-gradient(140deg,#a4efff,#7aacff);border-radius:13px;padding:15px 21px;min-width:106px;min-height:56px;box-shadow:0 8px 24px #4ca5ff4a;color:#0b1a32;font-size:16px;font-weight:780;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease}
+    .search:active{transform:translate(-50%,-50%) scale(.95)}.search:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    .tapmark{position:absolute;pointer-events:none;width:24px;height:24px;border:2px solid #f5f3a2;border-radius:50%;transform:translate(-50%,-50%);z-index:4;animation:ripple .75s ease-out forwards}@keyframes ripple{from{opacity:1;scale:.6}to{opacity:0;scale:2.2}}
+    .stage-help{position:absolute;left:10px;right:10px;bottom:10px;text-align:center;color:#b4c5db;font-size:11px;pointer-events:none;text-shadow:0 1px 4px #081123}
+    .stage-num{position:absolute;top:11px;left:12px;color:#9db2d0;font-size:12px;pointer-events:none}.stage-shift{position:absolute;top:11px;right:12px;color:#9db2d0;font-size:12px;pointer-events:none}
+    .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{border:1px solid #273956;background:#101d33;border-radius:12px;padding:12px 8px;min-height:74px}.metric .value{display:block;font-size:22px;line-height:1.15;font-weight:790;letter-spacing:-.5px;font-variant-numeric:tabular-nums}.metric .name{display:block;color:var(--sub);font-size:11px;margin-top:6px}
+    .details{font-size:12px;display:grid;grid-template-columns:1fr auto;gap:7px 12px}.details span:nth-child(even){text-align:right;color:#d5e3fb;font-variant-numeric:tabular-nums}.details span:nth-child(odd){color:var(--sub)}
+    .notebox{display:flex;align-items:flex-start;gap:9px;padding:13px 14px;margin-bottom:14px;background:#112b3a;border:1px solid #24526b;border-radius:13px;font-size:12px;color:#bddbea}.notebox strong{color:#d5f3ff}
+    .footer{color:#8f9db6;font-size:12px;line-height:1.65}.footer a{color:#85d5ff}
+    @media(max-width:370px){.wrap{padding-left:12px;padding-right:12px}.panel{padding:12px}.btn{padding:10px 11px}.search{min-width:94px;padding:12px 15px}.metrics{gap:6px}.metric .value{font-size:18px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo"><div class="mark">T</div>TapLab</div><div class="version">Web Tester v1.0</div></header>
+  <section class="intro"><h1>Train your tap model.</h1><p>Record genuine finger taps on the demo Search button. It moves among three slots after a random 15–25 successful clicks. Export the exact timing and coordinates to JSON.</p></section>
+  <section class="panel">
+    <div class="controlrow">
+      <div id="status" class="status"><i class="dot"></i><span id="statusText">Ready to record</span></div>
+      <div class="actions">
+        <button class="btn primary" id="recordBtn" type="button">● Start recording</button>
+        <button class="btn warn" id="stopBtn" type="button" disabled>■ Stop</button>
+      </div>
+    </div>
+    <div class="hint" id="sessionInfo">Press Start, then tap Search normally. Missed taps inside the game area are recorded too.</div>
+  </section>
+  <section class="panel">
+    <div class="stage-label"><h2 style="margin:0">Live demo game</h2><span class="pill" id="slotTag">Position A</span></div>
+    <div class="stage" id="stage" aria-label="Three position tap demo">
+      <div class="gridback"></div>
+      <div class="slot-guide" style="left:25%;top:24%">A</div><div class="slot-guide" style="left:72%;top:50%">B</div><div class="slot-guide" style="left:26%;top:78%">C</div>
+      <div class="stage-num" id="demoCounter">Searches: 0</div><div class="stage-shift" id="shiftCounter">Next change: hidden</div>
+      <button id="searchBtn" class="search" data-taplab-target="search" type="button">⌕ Search</button>
+      <div class="stage-help">Tap the button as you would in your own game. Avoid holding or scrolling the game area.</div>
+    </div>
+    <div class="hint">Position A, B, or C is logged along with where your finger actually landed. The next move count is randomized and not revealed during play.</div>
+  </section>
+  <section class="panel"><h2>Recording overview</h2><div class="metrics">
+    <div class="metric"><span class="value" id="countVal">0</span><span class="name">Recorded taps</span></div>
+    <div class="metric"><span class="value" id="hitVal">—</span><span class="name">Button hits</span></div>
+    <div class="metric"><span class="value" id="intervalVal">—</span><span class="name">Median interval</span></div>
+    <div class="metric"><span class="value" id="holdVal">—</span><span class="name">Median hold</span></div>
+    <div class="metric"><span class="value" id="shiftsVal">0</span><span class="name">Slot changes</span></div>
+    <div class="metric"><span class="value" id="pathVal">0</span><span class="name">Path points</span></div>
+  </div></section>
+  <section class="panel"><h2>Session details</h2><div class="details">
+    <span>Viewport (CSS pixels)</span><span id="viewportVal">—</span>
+    <span>Device pixel ratio</span><span id="dprVal">—</span>
+    <span>Last recorded slot</span><span id="lastSlotVal">—</span>
+    <span>Last down → up</span><span id="lastDurationVal">—</span>
+    <span>Last tap center offset</span><span id="lastOffsetVal">—</span>
+    <span>Last tap start interval</span><span id="lastIntervalVal">—</span>
+  </div></section>
+  <section class="panel"><h2>Your recording</h2><div class="actions">
+    <button id="exportBtn" class="btn primary" type="button" disabled>↓ Save JSON</button>
+    <button id="shareBtn" class="btn" type="button" disabled>⇧ Share JSON</button>
+    <button id="copyBtn" class="btn" type="button" disabled>Copy JSON</button>
+    <button id="resetBtn" class="btn outline" type="button">Reset session</button>
+  </div><p class="hint" id="exportMessage">Data is kept on this device (in this browser's local storage) until reset. No server receives your taps.</p></section>
+  <div class="notebox"><span>ⓘ</span><span><strong>Testing your real game:</strong> a separate page cannot observe taps inside an unrelated browser tab. Add the included <code>taplab-recorder.js</code> file to the webpage you control and use its in-game Record / Export panel.</span></div>
+  <div class="footer">TapLab records browser-reported pointer coordinates in CSS pixels—not raw touchscreen sensor readings. Exported data includes touch paths when the browser reports pointer movements. Avoid capturing passwords or other private interactions.</div>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const storeKey = 'taplab-demo-session-v1';
+const stage = $('stage'), search = $('searchBtn');
+const slots = [{name:'A',x:25,y:24},{name:'B',x:72,y:50},{name:'C',x:26,y:78}];
+const MAX_TAPS=2500;
+let position=0, searches=0, searchesSinceShift=0, shiftThreshold=randomShift(), shifts=0;
+let recording=false, current=null, session=null, lastDown=null, lastUp=null, sessionStartMono=null;
+const round=n=>Number.isFinite(n)?Math.round(n*100)/100:null;
+const now=()=>performance.now();
+const iso=()=>new Date().toISOString();
+function randomShift(){return 15+Math.floor(Math.random()*11)}
+function view(){return {width:innerWidth,height:innerHeight,dpr:devicePixelRatio||1,scrollX,scrollY,visualViewport:window.visualViewport?{scale:round(visualViewport.scale),offsetLeft:round(visualViewport.offsetLeft),offsetTop:round(visualViewport.offsetTop)}:null}}
+function rect(el){const r=el.getBoundingClientRect();return {x:round(r.x),y:round(r.y),width:round(r.width),height:round(r.height),centerX:round(r.left+r.width/2),centerY:round(r.top+r.height/2)}}
+function isInside(r,x,y){return x>=r.x&&x<=r.x+r.width&&y>=r.y&&y<=r.y+r.height}
+function setPosition(){search.style.left=slots[position].x+'%';search.style.top=slots[position].y+'%';$('slotTag').textContent='Position '+slots[position].name;$('demoCounter').textContent='Searches: '+searches;$('shiftCounter').textContent='Changes: '+shifts}
+function blankSession(){return {schema:'taplab.taps.v1',app:'TapLab web demo',sessionId:new Date().toISOString().replace(/[-:.TZ]/g,'')+'-'+Math.random().toString(36).slice(2,8),startedAt:iso(),endedAt:null,device:{userAgent:navigator.userAgent,language:navigator.language,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||null},initialViewport:view(),game:{name:'3-position Search demo',shiftRule:'After 15 to 25 successful clicks',slots},shifts:[],events:[]}}
+function save(){try{localStorage.setItem(storeKey,JSON.stringify(session))}catch(e){$('exportMessage').textContent='Storage is full or unavailable. Export JSON now so your recording is not lost.'}}
+function point(e){return {tMs:round(now()-current.startMono),x:round(e.clientX),y:round(e.clientY),pressure:round(e.pressure),contactWidth:round(e.width),contactHeight:round(e.height)}}
+function start(){if(recording)return; if(!session||session.endedAt||session.events.length)session=blankSession();recording=true;current=null;lastDown=null;lastUp=null;sessionStartMono=now();$('status').classList.add('recording');$('statusText').textContent='Recording genuine taps';$('sessionInfo').textContent='Recording taps in the game area. Stop when you finish; taps are stored on this device.';$('recordBtn').disabled=true;$('stopBtn').disabled=false;save();refresh()}
+function stop(){if(!recording)return;recording=false;current=null;session.endedAt=iso();$('status').classList.remove('recording');$('statusText').textContent='Recording stopped';$('recordBtn').disabled=false;$('stopBtn').disabled=true;$('recordBtn').textContent='● Start new recording';$('sessionInfo').textContent='Ready to export. Starting again creates a fresh recording.';save();refresh()}
+function moveTap(e){if(!recording||!current||e.pointerId!==current.pointerId)return;const p=point(e),prev=current.path[current.path.length-1];if(current.path.length<80&&((p.tMs-prev.tMs)>=12||Math.hypot(p.x-prev.x,p.y-prev.y)>1.5))current.path.push(p)}
+function down(e){if(!recording||current||session.events.length>=MAX_TAPS)return;if(e.pointerType==='mouse'&&e.button!==0)return;
+  const stageRect=rect(stage),buttonRect=rect(search),t=now();
+  current={pointerId:e.pointerId,pointerType:e.pointerType||'unknown',startMono:t,downAt:iso(),downX:e.clientX,downY:e.clientY,downPressure:e.pressure,stageRect,buttonRect,slot:slots[position].name,wasHitAtDown:isInside(buttonRect,e.clientX,e.clientY),path:[]};
+  current.path.push(point(e));
+}
+function mark(x,y){const sr=stage.getBoundingClientRect(),d=document.createElement('span');d.className='tapmark';d.style.left=(x-sr.left)+'px';d.style.top=(y-sr.top)+'px';stage.appendChild(d);setTimeout(()=>d.remove(),820)}
+function end(e,cancelled=false){if(!recording||!current||e.pointerId!==current.pointerId)return;const c=current;moveTap(e);current=null;if(cancelled)return;
+  const t=now(),hold=Math.max(0,round(t-c.startMono)),hit=isInside(c.buttonRect,e.clientX,e.clientY)&&c.wasHitAtDown;
+  const sr=c.stageRect,br=c.buttonRect;
+  const entry={index:session.events.length+1,downAt:c.downAt,upAt:iso(),fromSessionStartMs:round(c.startMono-sessionStartMono),
+    interTapMs:lastDown===null?null:round(c.startMono-lastDown),idleGapMs:lastUp===null?null:round(c.startMono-lastUp),
+    holdMs:hold,pointerType:c.pointerType,down:{x:round(c.downX),y:round(c.downY),pressure:round(c.downPressure)},up:{x:round(e.clientX),y:round(e.clientY),pressure:round(e.pressure)},
+    path:c.path,slot:c.slot,hit,buttonRect:br,stageRect:sr,viewport:view(),buttonOffsetPx:{x:round(c.downX-br.centerX),y:round(c.downY-br.centerY)},
+    normalizedInButton:{x:round((c.downX-br.x)/br.width),y:round((c.downY-br.y)/br.height)},normalizedInStage:{x:round((c.downX-sr.x)/sr.width),y:round((c.downY-sr.y)/sr.height)},
+    moveDistancePx:round(Math.hypot(e.clientX-c.downX,e.clientY-c.downY))};
+  session.events.push(entry);lastDown=c.startMono;lastUp=t;mark(e.clientX,e.clientY);save();refresh();
+}
+function median(xs){if(!xs.length)return null;const a=xs.slice().sort((a,b)=>a-b),mid=a.length>>1;return a.length%2?a[mid]:(a[mid-1]+a[mid])/2}
+function summary(){const a=session?.events||[];const hit=a.filter(e=>e.hit).length;return{taps:a.length,hits:hit,misses:a.length-hit,hitRate:a.length?round(100*hit/a.length):null,medianInterTapMs:round(median(a.map(e=>e.interTapMs).filter(Number.isFinite))),medianHoldMs:round(median(a.map(e=>e.holdMs).filter(Number.isFinite))),observedShiftCount:session?.shifts?.length||0,slots:Object.fromEntries(slots.map(s=>[s.name,a.filter(e=>e.slot===s.name).length]))}}
+function refresh(){const a=session?.events||[],s=summary(),last=a[a.length-1];$('countVal').textContent=s.taps;$('hitVal').textContent=s.hitRate===null?'—':s.hitRate+'%';$('intervalVal').textContent=s.medianInterTapMs===null?'—':Math.round(s.medianInterTapMs)+'ms';$('holdVal').textContent=s.medianHoldMs===null?'—':Math.round(s.medianHoldMs)+'ms';$('shiftsVal').textContent=s.observedShiftCount;$('pathVal').textContent=a.reduce((n,e)=>n+e.path.length,0);
+ $('viewportVal').textContent=innerWidth+' × '+innerHeight;$('dprVal').textContent=String(round(devicePixelRatio||1));$('lastSlotVal').textContent=last?.slot||'—';$('lastDurationVal').textContent=last?last.holdMs+' ms':'—';$('lastOffsetVal').textContent=last?`${last.buttonOffsetPx.x}, ${last.buttonOffsetPx.y} px`:'—';$('lastIntervalVal').textContent=last?.interTapMs!==null&&last?.interTapMs!==undefined?last.interTapMs+' ms':'—';
+ for(const id of ['exportBtn','copyBtn','shareBtn'])$(id).disabled=!a.length;
+}
+function payload(){return JSON.stringify({...session,summary:summary(),exportedAt:iso()},null,2)}
+function jsonFile(){return new File([payload()],`taplab-${session.sessionId}.json`,{type:'application/json'})}
+function download(){if(!session?.events?.length)return;const blob=new Blob([payload()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`taplab-${session.sessionId}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);$('exportMessage').textContent='JSON requested. In Safari, check Downloads or use Share JSON → Save to Files.'}
+async function share(){if(!session?.events?.length)return;try{const file=jsonFile();if(navigator.canShare?.({files:[file]})&&navigator.share){await navigator.share({files:[file],title:'TapLab session'});$('exportMessage').textContent='Share sheet closed. Choose Save to Files to keep a local JSON.'}else download()}catch(e){if(e.name!=='AbortError'){$('exportMessage').textContent='Share was unavailable; use Save JSON instead.'}}}
+async function copy(){try{await navigator.clipboard.writeText(payload());$('exportMessage').textContent='Full JSON copied to clipboard.'}catch(e){$('exportMessage').textContent='Clipboard permission blocked. Use Save JSON or Share JSON.'}}
+function reset(){if(recording)stop();if(session?.events.length&&!confirm('Discard recorded taps and reset the demo? Export first if you want to keep them.'))return;session=null;lastDown=null;lastUp=null;position=0;searches=0;searchesSinceShift=0;shifts=0;shiftThreshold=randomShift();try{localStorage.removeItem(storeKey)}catch{};$('status').classList.remove('recording');$('statusText').textContent='Ready to record';$('recordBtn').textContent='● Start recording';$('sessionInfo').textContent='Press Start, then tap Search normally. Missed taps inside the game area are recorded too.';$('exportMessage').textContent='No session recorded. Your data stays on this device.';setPosition();refresh()}
+function searchClick(){searches++;searchesSinceShift++;if(searchesSinceShift>=shiftThreshold){const prior=position;position=(position+1+Math.floor(Math.random()*2))%3;shifts++;if(recording&&session){session.shifts.push({at:iso(),afterSearchCount:searches,from:slots[prior].name,to:slots[position].name,precedingShiftInterval:shiftThreshold});save()}searchesSinceShift=0;shiftThreshold=randomShift()}setPosition()}
+stage.addEventListener('pointerdown',down,true);stage.addEventListener('pointermove',moveTap,true);stage.addEventListener('pointerup',e=>end(e,false),true);stage.addEventListener('pointercancel',e=>end(e,true),true);
+search.addEventListener('click',searchClick);
+$('recordBtn').addEventListener('click',start);$('stopBtn').addEventListener('click',stop);$('exportBtn').addEventListener('click',download);$('shareBtn').addEventListener('click',share);$('copyBtn').addEventListener('click',copy);$('resetBtn').addEventListener('click',reset);
+window.addEventListener('resize',refresh);
+try{const old=JSON.parse(localStorage.getItem(storeKey));if(old&&old.schema==='taplab.taps.v1'&&Array.isArray(old.events)){session=old;session.endedAt=session.endedAt||iso();$('statusText').textContent='Previous recording recovered';$('sessionInfo').textContent='Recovered your previously stored session. Export it or start a fresh recording.';$('recordBtn').textContent='● Start new recording';}}
+catch{}
+setPosition();refresh();
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+})();
+</script>
+</body>
+</html>
