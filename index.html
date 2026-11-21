@@ -28,10 +28,10 @@
     .actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #334563;background:#22334f;color:var(--ink);padding:11px 14px;border-radius:11px;font-weight:650;min-height:44px}.btn.primary{border:0;color:#061426;background:linear-gradient(120deg,#7adaff,#70a8ff)}.btn.warn{border-color:#6e3944;background:#4a2633;color:#ffb7c4}.btn.outline{background:transparent}.btn:focus-visible{outline:3px solid #69c4ff;outline-offset:2px}
     .hint{font-size:12px;color:var(--sub);margin-top:10px}
     .stage-label{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:11px}.pill{color:#89edcd;background:#1b403a;border:1px solid #38695b;border-radius:99px;padding:5px 9px;font-size:12px;font-weight:650}
-    .stage{position:relative;overflow:hidden;min-height:335px;height:min(49vh,430px);background:radial-gradient(circle at 25% 25%,#223958 0,transparent 42%),linear-gradient(135deg,#172541,#101b30);border:1px solid #3b5272;border-radius:15px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+    .stage{position:relative;overflow:hidden;min-height:220px;height:min(32vh,280px);background:radial-gradient(circle at 25% 25%,#223958 0,transparent 42%),linear-gradient(135deg,#172541,#101b30);border:1px solid #3b5272;border-radius:15px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
     .gridback{position:absolute;inset:0;background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
-    .slot-guide{position:absolute;transform:translate(-50%,-50%);border:1px dashed #6a86aa77;border-radius:14px;width:112px;height:72px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#6e83a7;pointer-events:none}
-    .search{position:absolute;transform:translate(-50%,-50%);z-index:2;white-space:nowrap;border:1px solid #afe4ff;background:linear-gradient(140deg,#a4efff,#7aacff);border-radius:13px;padding:15px 21px;min-width:106px;min-height:56px;box-shadow:0 8px 24px #4ca5ff4a;color:#0b1a32;font-size:16px;font-weight:780;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease}
+    .slot-guide{position:absolute;transform:translate(-50%,-50%);border:1px dashed #6a86aa77;border-radius:14px;width:min(30%,112px);height:72px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#6e83a7;pointer-events:none}
+    .search{position:absolute;transform:translate(-50%,-50%);z-index:2;white-space:nowrap;width:30%;max-width:112px;border:1px solid #afe4ff;background:linear-gradient(140deg,#a4efff,#7aacff);border-radius:13px;padding:12px 4px;min-width:0;min-height:56px;box-shadow:0 8px 24px #4ca5ff4a;color:#0b1a32;font-size:clamp(12px,3.5vw,16px);font-weight:780;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease}
     .search:active{transform:translate(-50%,-50%) scale(.95)}.search:focus-visible{outline:3px solid #fff;outline-offset:3px}
     .tapmark{position:absolute;pointer-events:none;width:24px;height:24px;border:2px solid #f5f3a2;border-radius:50%;transform:translate(-50%,-50%);z-index:4;animation:ripple .75s ease-out forwards}@keyframes ripple{from{opacity:1;scale:.6}to{opacity:0;scale:2.2}}
     .stage-help{position:absolute;left:10px;right:10px;bottom:10px;text-align:center;color:#b4c5db;font-size:11px;pointer-events:none;text-shadow:0 1px 4px #081123}
@@ -40,14 +40,14 @@
     .details{font-size:12px;display:grid;grid-template-columns:1fr auto;gap:7px 12px}.details span:nth-child(even){text-align:right;color:#d5e3fb;font-variant-numeric:tabular-nums}.details span:nth-child(odd){color:var(--sub)}
     .notebox{display:flex;align-items:flex-start;gap:9px;padding:13px 14px;margin-bottom:14px;background:#112b3a;border:1px solid #24526b;border-radius:13px;font-size:12px;color:#bddbea}.notebox strong{color:#d5f3ff}
     .footer{color:#8f9db6;font-size:12px;line-height:1.65}.footer a{color:#85d5ff}
-    @media(max-width:370px){.wrap{padding-left:12px;padding-right:12px}.panel{padding:12px}.btn{padding:10px 11px}.search{min-width:94px;padding:12px 15px}.metrics{gap:6px}.metric .value{font-size:18px}}
+    @media(max-width:370px){.wrap{padding-left:12px;padding-right:12px}.panel{padding:12px}.btn{padding:10px 11px}.search{min-width:0;padding:12px 4px}.metrics{gap:6px}.metric .value{font-size:18px}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
 <div class="wrap">
-  <header><div class="logo"><div class="mark">T</div>TapLab</div><div class="version">Web Tester v1.0</div></header>
-  <section class="intro"><h1>Train your tap model.</h1><p>Record genuine finger taps on the demo Search button. It moves among three slots after a random 15–25 successful clicks. Export the exact timing and coordinates to JSON.</p></section>
+  <header><div class="logo"><div class="mark">T</div>TapLab</div><div class="version">Web Tester v1.1</div></header>
+  <section class="intro"><h1>Train your tap model.</h1><p>Record genuine finger taps on the demo Search button. It moves between three side-by-side positions after a random 15–25 successful clicks. Export the exact timing and coordinates to JSON.</p></section>
   <section class="panel">
     <div class="controlrow">
       <div id="status" class="status"><i class="dot"></i><span id="statusText">Ready to record</span></div>
@@ -62,7 +62,7 @@
     <div class="stage-label"><h2 style="margin:0">Live demo game</h2><span class="pill" id="slotTag">Position A</span></div>
     <div class="stage" id="stage" aria-label="Three position tap demo">
       <div class="gridback"></div>
-      <div class="slot-guide" style="left:25%;top:24%">A</div><div class="slot-guide" style="left:72%;top:50%">B</div><div class="slot-guide" style="left:26%;top:78%">C</div>
+      <div class="slot-guide" style="left:18%;top:50%">A</div><div class="slot-guide" style="left:50%;top:50%">B</div><div class="slot-guide" style="left:82%;top:50%">C</div>
       <div class="stage-num" id="demoCounter">Searches: 0</div><div class="stage-shift" id="shiftCounter">Next change: hidden</div>
       <button id="searchBtn" class="search" data-taplab-target="search" type="button">⌕ Search</button>
       <div class="stage-help">Tap the button as you would in your own game. Avoid holding or scrolling the game area.</div>
@@ -100,7 +100,7 @@
 const $ = id => document.getElementById(id);
 const storeKey = 'taplab-demo-session-v1';
 const stage = $('stage'), search = $('searchBtn');
-const slots = [{name:'A',x:25,y:24},{name:'B',x:72,y:50},{name:'C',x:26,y:78}];
+const slots = [{name:'A',x:18,y:50},{name:'B',x:50,y:50},{name:'C',x:82,y:50}];
 const MAX_TAPS=2500;
 let position=0, searches=0, searchesSinceShift=0, shiftThreshold=randomShift(), shifts=0;
 let recording=false, current=null, session=null, lastDown=null, lastUp=null, sessionStartMono=null;
@@ -112,7 +112,7 @@ function view(){return {width:innerWidth,height:innerHeight,dpr:devicePixelRatio
 function rect(el){const r=el.getBoundingClientRect();return {x:round(r.x),y:round(r.y),width:round(r.width),height:round(r.height),centerX:round(r.left+r.width/2),centerY:round(r.top+r.height/2)}}
 function isInside(r,x,y){return x>=r.x&&x<=r.x+r.width&&y>=r.y&&y<=r.y+r.height}
 function setPosition(){search.style.left=slots[position].x+'%';search.style.top=slots[position].y+'%';$('slotTag').textContent='Position '+slots[position].name;$('demoCounter').textContent='Searches: '+searches;$('shiftCounter').textContent='Changes: '+shifts}
-function blankSession(){return {schema:'taplab.taps.v1',app:'TapLab web demo',sessionId:new Date().toISOString().replace(/[-:.TZ]/g,'')+'-'+Math.random().toString(36).slice(2,8),startedAt:iso(),endedAt:null,device:{userAgent:navigator.userAgent,language:navigator.language,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||null},initialViewport:view(),game:{name:'3-position Search demo',shiftRule:'After 15 to 25 successful clicks',slots},shifts:[],events:[]}}
+function blankSession(){return {schema:'taplab.taps.v1',app:'TapLab web demo',sessionId:new Date().toISOString().replace(/[-:.TZ]/g,'')+'-'+Math.random().toString(36).slice(2,8),startedAt:iso(),endedAt:null,device:{userAgent:navigator.userAgent,language:navigator.language,timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||null},initialViewport:view(),game:{name:'3-position Search demo',layout:'horizontal-row',shiftRule:'After 15 to 25 successful clicks',slots},shifts:[],events:[]}}
 function save(){try{localStorage.setItem(storeKey,JSON.stringify(session))}catch(e){$('exportMessage').textContent='Storage is full or unavailable. Export JSON now so your recording is not lost.'}}
 function point(e){return {tMs:round(now()-current.startMono),x:round(e.clientX),y:round(e.clientY),pressure:round(e.pressure),contactWidth:round(e.width),contactHeight:round(e.height)}}
 function start(){if(recording)return; if(!session||session.endedAt||session.events.length)session=blankSession();recording=true;current=null;lastDown=null;lastUp=null;sessionStartMono=now();$('status').classList.add('recording');$('statusText').textContent='Recording genuine taps';$('sessionInfo').textContent='Recording taps in the game area. Stop when you finish; taps are stored on this device.';$('recordBtn').disabled=true;$('stopBtn').disabled=false;save();refresh()}
