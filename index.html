@@ -30,7 +30,7 @@
     .stage-label{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:11px}.pill{color:#89edcd;background:#1b403a;border:1px solid #38695b;border-radius:99px;padding:5px 9px;font-size:12px;font-weight:650}
     .stage{position:relative;overflow:hidden;min-height:220px;height:min(32vh,280px);background:radial-gradient(circle at 25% 25%,#223958 0,transparent 42%),linear-gradient(135deg,#172541,#101b30);border:1px solid #3b5272;border-radius:15px;touch-action:manipulation;-webkit-user-select:none;user-select:none}
     .gridback{position:absolute;inset:0;background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
-    .slot-guide{position:absolute;transform:translate(-50%,-50%);border:1px dashed #6a86aa77;border-radius:14px;width:min(30%,112px);height:72px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#6e83a7;pointer-events:none}
+    .slot-guide{position:absolute;transform:translate(-50%,-50%);border:1px dashed #6a86aa77;border-radius:14px;width:min(30%,112px);height:72px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:11px;font-weight:700;color:#9fb1cb;pointer-events:none}
     .search{position:absolute;transform:translate(-50%,-50%);z-index:2;white-space:nowrap;width:30%;max-width:112px;border:1px solid #afe4ff;background:linear-gradient(140deg,#a4efff,#7aacff);border-radius:13px;padding:12px 4px;min-width:0;min-height:56px;box-shadow:0 8px 24px #4ca5ff4a;color:#0b1a32;font-size:clamp(12px,3.5vw,16px);font-weight:780;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease}
     .search:active{transform:translate(-50%,-50%) scale(.95)}.search:focus-visible{outline:3px solid #fff;outline-offset:3px}
     .tapmark{position:absolute;pointer-events:none;width:24px;height:24px;border:2px solid #f5f3a2;border-radius:50%;transform:translate(-50%,-50%);z-index:4;animation:ripple .75s ease-out forwards}@keyframes ripple{from{opacity:1;scale:.6}to{opacity:0;scale:2.2}}
@@ -46,7 +46,7 @@
 </head>
 <body>
 <div class="wrap">
-  <header><div class="logo"><div class="mark">T</div>TapLab</div><div class="version">Web Tester v1.1</div></header>
+  <header><div class="logo"><div class="mark">T</div>TapLab</div><div class="version">Web Tester v1.2 · ROW</div></header>
   <section class="intro"><h1>Train your tap model.</h1><p>Record genuine finger taps on the demo Search button. It moves between three side-by-side positions after a random 15–25 successful clicks. Export the exact timing and coordinates to JSON.</p></section>
   <section class="panel">
     <div class="controlrow">
@@ -59,15 +59,15 @@
     <div class="hint" id="sessionInfo">Press Start, then tap Search normally. Missed taps inside the game area are recorded too.</div>
   </section>
   <section class="panel">
-    <div class="stage-label"><h2 style="margin:0">Live demo game</h2><span class="pill" id="slotTag">Position A</span></div>
+    <div class="stage-label"><h2 style="margin:0">Live demo game <small style="color:#9bdfff;font-size:11px;font-weight:600;vertical-align:middle">HORIZONTAL ROW</small></h2><span class="pill" id="slotTag">Position A</span></div>
     <div class="stage" id="stage" aria-label="Three position tap demo">
       <div class="gridback"></div>
       <div class="slot-guide" style="left:18%;top:50%">A</div><div class="slot-guide" style="left:50%;top:50%">B</div><div class="slot-guide" style="left:82%;top:50%">C</div>
       <div class="stage-num" id="demoCounter">Searches: 0</div><div class="stage-shift" id="shiftCounter">Next change: hidden</div>
-      <button id="searchBtn" class="search" data-taplab-target="search" type="button">⌕ Search</button>
+      <button id="searchBtn" class="search" style="left:18%;top:50%" data-taplab-target="search" type="button">⌕ Search</button>
       <div class="stage-help">Tap the button as you would in your own game. Avoid holding or scrolling the game area.</div>
     </div>
-    <div class="hint">Position A, B, or C is logged along with where your finger actually landed. The next move count is randomized and not revealed during play.</div>
+    <div class="hint">Position A, B, or C is logged along with where your finger actually landed. All three positions share one horizontal row. The next move count is randomized and not revealed during play.</div>
   </section>
   <section class="panel"><h2>Recording overview</h2><div class="metrics">
     <div class="metric"><span class="value" id="countVal">0</span><span class="name">Recorded taps</span></div>
@@ -155,7 +155,7 @@ window.addEventListener('resize',refresh);
 try{const old=JSON.parse(localStorage.getItem(storeKey));if(old&&old.schema==='taplab.taps.v1'&&Array.isArray(old.events)){session=old;session.endedAt=session.endedAt||iso();$('statusText').textContent='Previous recording recovered';$('sessionInfo').textContent='Recovered your previously stored session. Export it or start a fresh recording.';$('recordBtn').textContent='● Start new recording';}}
 catch{}
 setPosition();refresh();
-if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}))}
 })();
 </script>
 </body>

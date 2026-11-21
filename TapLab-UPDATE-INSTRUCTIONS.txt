@@ -1,0 +1,17 @@
+TapLab — Horizontal Row Layout v1.2
+
+Upload these files to the TOP LEVEL (repository root) of your GitHub Pages repository:
+- index.html (overwrites existing index.html)
+- taplab-row-v2.html (alternate URL to bypass an old cached homepage)
+- sw.js (overwrites old service worker and clears the TapLab v1 cache)
+- manifest.webmanifest, icon-192.png, icon-512.png, taplab-recorder.js (retain or replace)
+
+After committing, verify the GitHub Actions / Pages deployment completed successfully.
+Open: https://avajzird.github.io/Ya-lab-/taplab-row-v2.html?v=12
+The page header MUST say 'Web Tester v1.2 · ROW', and the game should say HORIZONTAL ROW.
+Then open the usual homepage with ?v=12:
+https://avajzird.github.io/Ya-lab-/?v=12
+
+If it still shows the old triangle, check Settings > Pages for the actual published branch and folder. Update that folder, not just another branch, and recheck deployment. On iPhone, open in Safari (not just an in-app browser) and try a Private tab to rule out stale cache.
+
+Behavior preserved: one active Search button moves among three horizontally aligned positions A/B/C after a random 15–25 successful clicks. Tap timing, hit detection and export schema are unchanged. The other two positions remain guides, not clickable targets.
